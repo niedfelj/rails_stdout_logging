@@ -2,7 +2,13 @@ module RailsStdoutLogging
   class Rails
 
     def self.heroku_stdout_logger
-      logger = Logger.new(STDOUT)
+      
+      if Rails.const_defined? 'Console'
+        logger = Logger.new(STDERR)
+      else
+        logger = Logger.new(STDOUT)
+      end
+
       logger = ActiveSupport::TaggedLogging.new(logger) if defined?(ActiveSupport::TaggedLogging)
       logger.level = Logger.const_get(log_level)
       logger
